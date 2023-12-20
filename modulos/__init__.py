@@ -1,1 +1,1 @@
-from modulos import modulo1
+from modulos import funcoes
