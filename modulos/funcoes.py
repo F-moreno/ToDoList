@@ -16,11 +16,11 @@ def limpaTela():
 def logger(_function):
     @wraps(_function)
     def wrapper(*args, **kwargs):
-        msg = f"{str(_function.__name__).replace('_', ' ').capitalize():>20}"
+        msg = f"{str(_function.__name__).replace('_', ' ').capitalize():<20}"
         if _function(*args, **kwargs):
             msg += f'{" Success":<10}'
         else:
-            msg += " Failed"
+            msg += f'{" Failed":<10}'
         log.info(msg)
 
     return wrapper
@@ -96,13 +96,66 @@ def remover_tarefa(lista: Lista) -> int:
     exibir_tarefas(lista)
 
     try:
-        index = int(input("Qual tarefa deseja excluir(ID): "))
+        index = int(input("Qual tarefa deseja excluir?(ID): ")) - 1
         del lista.tarefas[index]
         return 1
     except:
         return 0
 
 
-menu = [sair, exibir_tarefas, adicionar_tarefas, remover_tarefa]
+@logger
+def iniciar_tarefa(lista: Lista) -> int:
+    limpaTela()
+    nao_existe = 1  # controlado para o caso de nao existir tarefas não inicializadas
+    try:
+        for tarefa in lista:
+            if tarefa.indexEstado == 0:
+                print(f"{lista.index} - {tarefa}")
+                nao_existe = 0
+        if nao_existe:
+            raise Exception
+
+        index = int(input("Qual tarefa deseja iniciar?(ID): ")) - 1
+
+        if lista.tarefas[index].indexEstado == 0:
+            lista.tarefas[index].mudar_estado()
+        else:
+            raise Exception
+        return 1
+    except:
+        return 0
+
+
+@logger
+def finalizar_tarefa(lista: Lista) -> int:
+    limpaTela()
+    nao_existe = 1  # controlado para o caso de nao existir tarefas não inicializadas
+    try:
+        for tarefa in lista:
+            if tarefa.indexEstado == 1:
+                print(f"{lista.index} - {tarefa}")
+                nao_existe = 0
+        if nao_existe:
+            raise Exception
+
+        index = int(input("Qual tarefa deseja iniciar?(ID): ")) - 1
+        if lista.tarefas[index].indexEstado == 1:
+            lista.tarefas[index].mudar_estado()
+        else:
+            raise Exception
+        return 1
+    except:
+        return 0
+
+
+# iniciar tarefa, finalizar tarefa
+menu = [
+    sair,
+    exibir_tarefas,
+    adicionar_tarefas,
+    remover_tarefa,
+    iniciar_tarefa,
+    finalizar_tarefa,
+]
 
 submenu = [sair, remover_tarefa]

@@ -47,4 +47,8 @@ class Lista:
             raise StopIteration
 
     def __str__(self):
-        return f"{len(self.tarefas)}"
+        cont = 0
+        for tarefa in self.tarefas:
+            if tarefa.indexEstado < 2:
+                cont += 1
+        return f"{cont}"
