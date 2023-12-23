@@ -1,4 +1,4 @@
-import logging
+import logging, os
 from functools import wraps
 from modulos.classes import Lista
 from modulos.classes import Tarefa
@@ -8,13 +8,17 @@ logging.basicConfig(filename="app.log", level=logging.DEBUG, format=LOG_FORMAT)
 log = logging.getLogger()
 
 
+def limpaTela():
+    os.system("clear" if os.name == "posix" else "cls")
+
+
 # Decorator para gerenciar o log
 def logger(_function):
     @wraps(_function)
     def wrapper(*args, **kwargs):
-        msg = str(_function.__name__).replace("_", " ").capitalize()[:20]
+        msg = f"{str(_function.__name__).replace('_', ' ').capitalize():>20}"
         if _function(*args, **kwargs):
-            msg += " Success"
+            msg += f'{" Success":<10}'
         else:
             msg += " Failed"
         log.info(msg)
@@ -38,14 +42,17 @@ def qtd_tarefas(lista: Lista) -> int:
 @logger
 def exibe_menu(_funcoes) -> int:
     """Exibe menu de acordo com a lista de funções passada."""
-    for i in range(1, len(_funcoes)):  # percorre a lista de funcoes
+    try:
+        for i in range(1, len(_funcoes)):  # percorre a lista de funcoes
+            print(
+                f"[{i}] - {str(_funcoes[i].__name__).replace('_',' ').capitalize()}"
+            )  # exibe todas as funççoes com exceção do indice 0
         print(
-            f"[{i}] - {str(_funcoes[i].__name__).replace('_',' ').capitalize()}"
-        )  # exibe todas as funççoes com exceção do indice 0
-    print(
-        f"[0] - {str(_funcoes[0].__name__).replace('_',' ').capitalize()}"
-    )  # Exibe a função de indice 0
-    return 1
+            f"[0] - {str(_funcoes[0].__name__).replace('_',' ').capitalize()}"
+        )  # Exibe a função de indice 0
+        return 1
+    except:
+        return 0
 
 
 def callback(op, funcoes, *arg, **kwargs):
@@ -59,28 +66,43 @@ def sair(lista) -> int:
 
 @logger
 def exibir_tarefas(lista) -> None:
-    for tarefa in lista:
-        print(f"{lista.index} - {tarefa}")
-    return 1
+    try:
+        for tarefa in lista:
+            print(f"{lista.index} - {tarefa}")
+        return 1
+    except:
+        return 0
 
 
 @logger
-def adicionar_tarefas(lista: Lista):
-    titulo = "tarefa 1"
-    descricao = "descricao da tarefa 1"
-    data = "25/05/2018"
-    # titulo = input()
-    # descricao = input()
-    # data = input()
-    tarefa = Tarefa(titulo, data, descricao)
-    lista.tarefas.append(tarefa)
+def adicionar_tarefas(lista: Lista) -> int:
+    try:
+        titulo = "tarefa 1"
+        descricao = "descricao da tarefa 1"
+        data = "25/05/2018"
+        # titulo = input()
+        # descricao = input()
+        # data = input()
+        tarefa = Tarefa(titulo, data, descricao)
+        lista.tarefas.append(tarefa)
+        return 1
+    except:
+        return 0
 
 
 @logger
-def remover():
-    pass
+def remover_tarefa(lista: Lista) -> int:
+    limpaTela()
+    exibir_tarefas(lista)
+
+    try:
+        index = int(input("Qual tarefa deseja excluir(ID): "))
+        del lista.tarefas[index]
+        return 1
+    except:
+        return 0
 
 
-menu = [sair, exibir_tarefas, adicionar_tarefas]
+menu = [sair, exibir_tarefas, adicionar_tarefas, remover_tarefa]
 
-submenu = [sair, remover]
+submenu = [sair, remover_tarefa]

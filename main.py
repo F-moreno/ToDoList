@@ -31,10 +31,11 @@ while op:
         op = int(input())
         if op < 0 or op >= len(function.menu):
             raise Exception("Opção invalida!")
-    except Exception as e:
-        print(f"{e}")
+
     except ValueError as e:
         print("Apenas numeros inteiros.")
+    except Exception as e:
+        print(f"{e}")
     else:
         function.callback(op, function.menu, lista_tarefas)
     finally:
