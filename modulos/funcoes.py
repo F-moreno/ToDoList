@@ -1,4 +1,5 @@
 import logging
+from functools import wraps
 from modulos.classes import Lista
 from modulos.classes import Tarefa
 
@@ -9,6 +10,7 @@ log = logging.getLogger()
 
 # Decorator para gerenciar o log
 def logger(_function):
+    @wraps(_function)
     def wrapper(*args, **kwargs):
         log.info(str(_function).split()[1].replace("_", " ").capitalize())
         return _function(*args, **kwargs)
@@ -26,30 +28,33 @@ def exibe_menu(_funcoes):
     """Exibe menu de acordo com a lista de funções passada."""
     for i in range(1, len(_funcoes)):  # percorre a lista de funcoes
         print(
-            f"[{i}] - {str(_funcoes[i]).split()[1].replace('_',' ').capitalize()}"
+            f"[{i}] - {str(_funcoes[i].__name__).replace('_',' ').capitalize()}"
         )  # exibe todas as funççoes com exceção do indice 0
     print(
-        f"[0] - {str(_funcoes[0]).split()[1].replace('_',' ').capitalize()}"
+        f"[0] - {str(_funcoes[0].__name__).replace('_',' ').capitalize()}"
     )  # Exibe a função de indice 0
 
 
-@logger
 def callback(op, funcoes):
     return funcoes[op]()
 
 
+@logger
 def sair():
     return 0
 
 
+@logger
 def exibir_tarefas():
     return 1
 
 
+@logger
 def adicionar_tarefas():
     return 1
 
 
+@logger
 def remover():
     pass
 
