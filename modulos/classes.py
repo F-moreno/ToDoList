@@ -9,12 +9,13 @@ class Tarefa:
         self.titulo = titulo
         self.data = data
         self.descricao = descricao
-        self.estado = estado
+        self.indexEstado = estado
+        self.estado = ["Criado", "Em andamento", "Concluido"]
 
     def mudar_estado(self) -> None:
         try:
-            if self.estado < 2:
-                self.estado += 1
+            if self.indexEstado < 2:
+                self.indexEstado += 1
             else:
                 raise TarefaConcluidaError("A tarefa ja esta concluida!")
         except TarefaConcluidaError as e:
@@ -23,15 +24,11 @@ class Tarefa:
             print(f"Erro inesperado: {e}")
 
     def __str__(self) -> str:
-        return (
-            f"Tarefa: {self.titulo} | Iniciada em: {self.data} | Estado: {self.estado}"
-        )
+        return f"Tarefa: {self.titulo} | Iniciada em: {self.data} | Estado: {self.estado[self.indexEstado]}"
 
 
 class Lista:
-    def __init__(
-        self, titulo: str, autor: str, tarefas: list[Tarefa] = [Tarefa]
-    ) -> None:
+    def __init__(self, titulo: str, autor: str, tarefas: list[Tarefa] = []) -> None:
         self.titulo = titulo
         self.autor = autor
         self.tarefas = tarefas
@@ -48,3 +45,6 @@ class Lista:
         else:
             self.index = 0
             raise StopIteration
+
+    def __str__(self):
+        return f"{len(self.tarefas)}"

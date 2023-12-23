@@ -12,19 +12,31 @@ log = logging.getLogger()
 def logger(_function):
     @wraps(_function)
     def wrapper(*args, **kwargs):
-        log.info(str(_function).split()[1].replace("_", " ").capitalize())
-        return _function(*args, **kwargs)
+        msg = str(_function.__name__).replace("_", " ").capitalize()[:20]
+        if _function(*args, **kwargs):
+            msg += " Success"
+        else:
+            msg += " Failed"
+        log.info(msg)
 
     return wrapper
 
 
-def qtd_tarefas():
+def cria_lista(nome: str, autor: str) -> Lista:
+    return Lista(nome, autor)
+
+
+def carrega_lista():
+    pass
+
+
+def qtd_tarefas(lista: Lista) -> int:
     """Retorna a quantidade de tarefas existentes"""
-    return 0
+    return f"{lista}"
 
 
 @logger
-def exibe_menu(_funcoes):
+def exibe_menu(_funcoes) -> int:
     """Exibe menu de acordo com a lista de funções passada."""
     for i in range(1, len(_funcoes)):  # percorre a lista de funcoes
         print(
@@ -33,25 +45,35 @@ def exibe_menu(_funcoes):
     print(
         f"[0] - {str(_funcoes[0].__name__).replace('_',' ').capitalize()}"
     )  # Exibe a função de indice 0
+    return 1
 
 
-def callback(op, funcoes):
-    return funcoes[op]()
-
-
-@logger
-def sair():
-    return 0
+def callback(op, funcoes, *arg, **kwargs):
+    funcoes[op](*arg, **kwargs)
 
 
 @logger
-def exibir_tarefas():
+def sair(lista) -> int:
     return 1
 
 
 @logger
-def adicionar_tarefas():
+def exibir_tarefas(lista) -> None:
+    for tarefa in lista:
+        print(f"{lista.index} - {tarefa}")
     return 1
+
+
+@logger
+def adicionar_tarefas(lista: Lista):
+    titulo = "tarefa 1"
+    descricao = "descricao da tarefa 1"
+    data = "25/05/2018"
+    # titulo = input()
+    # descricao = input()
+    # data = input()
+    tarefa = Tarefa(titulo, data, descricao)
+    lista.tarefas.append(tarefa)
 
 
 @logger
