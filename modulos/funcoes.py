@@ -157,5 +157,3 @@ menu = [
     iniciar_tarefa,
     finalizar_tarefa,
 ]
-
-submenu = [sair, remover_tarefa]
