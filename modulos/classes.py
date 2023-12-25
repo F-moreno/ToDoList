@@ -5,11 +5,13 @@ class TarefaConcluidaError(Exception):
 
 
 class Tarefa:
-    def __init__(self, titulo: str, data: str, descricao: str, estado: int = 0) -> None:
+    def __init__(
+        self, titulo: str, data: str, descricao: str, estado: str = "0"
+    ) -> None:
         self.titulo = titulo
         self.data = data
         self.descricao = descricao
-        self.indexEstado = estado
+        self.indexEstado = int(estado)
         self.estado = ["Criado", "Em andamento", "Concluido"]
 
     def mudar_estado(self) -> None:

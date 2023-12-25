@@ -1,7 +1,6 @@
 import logging, os
 from functools import wraps
-from modulos.classes import Lista
-from modulos.classes import Tarefa
+from modulos.classes import *
 
 LOG_FORMAT = "%(levelname)s %(asctime)s - %(message)s"
 logging.basicConfig(filename="app.log", level=logging.DEBUG, format=LOG_FORMAT)
@@ -147,6 +146,20 @@ def finalizar_tarefa(lista: Lista) -> int:
     except:
         return 0
 
+
+@logger
+def carregar_lista(nome: str) -> Lista:
+    # dados = list([linha.split() for linha in open(f"{nome}.txt")])
+    dados = list([linha.split() for linha in open("tarefas.txt")])
+    lista = Lista(
+    dados[0][0].strip(),
+    dados[0][1].strip(),
+    [
+        Tarefa(titulo, data, descricao, estado)
+        for titulo, data, descricao, estado in dados[1:]
+    ],
+)
+retrun lista
 
 # iniciar tarefa, finalizar tarefa
 menu = [
